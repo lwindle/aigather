@@ -271,6 +271,26 @@ body {
     line-height: 1.6;
 }
 
+.news-card .news-content {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    max-height: 4.8em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.news-card .news-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 0.5rem 0;
+    display: none; /* 隐藏图片，只显示文本 */
+}
+
 .news-card .read-more {
     color: var(--primary-color);
     text-decoration: none;

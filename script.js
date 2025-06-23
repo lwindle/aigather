@@ -101,18 +101,38 @@ function displayNews(category) {
         return;
     }
 
-    newsGrid.innerHTML = filteredNews.map(news => `
-        <article class="news-card" data-category="${news.category}">
-            <div class="meta">
-                <span class="category">${getCategoryName(news.category)}</span>
-                <span class="source">${news.source}</span>
-                <span class="date">${formatDate(news.published_at)}</span>
-            </div>
-            <h3>${news.title}</h3>
-            <p>${news.description}</p>
-            <a href="${news.link}" target="_blank" class="read-more">阅读原文</a>
-        </article>
-    `).join('');
+    newsGrid.innerHTML = filteredNews.map(news => {
+        // 处理新闻描述中的图片
+        let processedDescription = processNewsDescription(news.description);
+        
+        return `
+            <article class="news-card" data-category="${news.category}">
+                <div class="meta">
+                    <span class="category">${getCategoryName(news.category)}</span>
+                    <span class="source">${news.source}</span>
+                    <span class="date">${formatDate(news.published_at)}</span>
+                </div>
+                <h3>${news.title}</h3>
+                <div class="news-content">${processedDescription}</div>
+                <a href="${news.link}" target="_blank" class="read-more">阅读原文</a>
+            </article>
+        `;
+    }).join('');
+}
+
+// 处理新闻描述，优化图片显示
+function processNewsDescription(description) {
+    if (!description) return '';
+    
+    // 移除HTML标签，保留纯文本
+    let textContent = description.replace(/<[^>]*>/g, '');
+    
+    // 如果描述太长，截断显示
+    if (textContent.length > 200) {
+        textContent = textContent.substring(0, 200) + '...';
+    }
+    
+    return textContent;
 }
 
 // 获取分类名称
