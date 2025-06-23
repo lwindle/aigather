@@ -14,7 +14,7 @@ func main() {
 	// 设置端口
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "80"  // 直接使用80端口
 	}
 
 	log.Printf("服务器启动在端口 %s", port)
