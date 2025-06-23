@@ -27,6 +27,8 @@ var newsSources = []struct {
 	{"TechCrunch AI", "https://techcrunch.com/tag/artificial-intelligence/feed/"},
 	{"VentureBeat AI", "https://venturebeat.com/category/ai/feed/"},
 	{"AI News", "https://artificialintelligence-news.com/feed/"},
+	{"36氪 AI", "https://36kr.com/information/ai/feed"},
+	{"36氪 科技", "https://36kr.com/information/technology/feed"},
 }
 
 // RSSFeed RSS源结构

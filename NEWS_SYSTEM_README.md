@@ -17,6 +17,8 @@
 - TechCrunch AI
 - VentureBeat AI  
 - AI News
+- 36氪 AI
+- 36氪 科技
 
 ## 快速开始
 
