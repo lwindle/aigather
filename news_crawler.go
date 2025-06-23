@@ -29,6 +29,16 @@ var newsSources = []struct {
 	{"AI News", "https://artificialintelligence-news.com/feed/"},
 	{"36氪 AI", "https://36kr.com/information/ai/feed"},
 	{"36氪 科技", "https://36kr.com/information/technology/feed"},
+	{"虎嗅 科技", "https://www.huxiu.com/rss/0.xml"},
+	{"钛媒体 科技", "https://www.tmtpost.com/rss.xml"},
+	{"机器之心", "https://www.jiqizhixin.com/rss"},
+	{"量子位", "https://www.qbitai.com/feed"},
+	{"雷锋网", "https://www.leiphone.com/feed"},
+	{"爱范儿", "https://www.ifanr.com/feed"},
+	{"极客公园", "https://www.geekpark.net/rss"},
+	{"CSDN AI", "https://blog.csdn.net/rss/ai_channel.xml"},
+	{"InfoQ 中国", "https://www.infoq.cn/feed"},
+	{"掘金 前端", "https://juejin.cn/rss"},
 }
 
 // RSSFeed RSS源结构
