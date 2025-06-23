@@ -1,34 +1,5 @@
-// 模拟AI新闻数据
-const newsData = [
-    {
-        id: 1,
-        title: "OpenAI发布GPT-5预览版，性能大幅提升",
-        category: "tech",
-        date: "2024-01-15",
-        summary: "OpenAI今日发布了GPT-5的预览版本，新模型在推理能力、多模态理解和代码生成方面都有显著提升。"
-    },
-    {
-        id: 2,
-        title: "谷歌推出Gemini Ultra 2.0，挑战GPT-5地位",
-        category: "tech",
-        date: "2024-01-14",
-        summary: "谷歌发布了Gemini Ultra 2.0版本，在多项AI基准测试中表现优异，与GPT-5形成直接竞争。"
-    },
-    {
-        id: 3,
-        title: "AI在医疗诊断领域取得重大突破",
-        category: "industry",
-        date: "2024-01-13",
-        summary: "最新研究显示，AI辅助诊断系统在多种疾病检测中的准确率已超过人类专家平均水平。"
-    },
-    {
-        id: 4,
-        title: "Meta发布开源大语言模型Llama 3",
-        category: "tech",
-        date: "2024-01-12",
-        summary: "Meta公司开源了Llama 3模型，为AI研究社区提供了强大的基础模型选择。"
-    }
-];
+// 新闻数据存储
+let newsData = [];
 
 // DOM元素
 const newsGrid = document.getElementById('newsGrid');
@@ -39,10 +10,51 @@ const navMenu = document.querySelector('.nav-menu');
 
 // 初始化
 document.addEventListener('DOMContentLoaded', function() {
-    displayNews('all');
+    loadNewsFromAPI();
     setupEventListeners();
     setupSmoothScrolling();
 });
+
+// 从API加载新闻
+async function loadNewsFromAPI() {
+    try {
+        const response = await fetch('/api/news');
+        if (!response.ok) {
+            throw new Error('网络响应错误');
+        }
+        
+        const data = await response.json();
+        newsData = data.news || [];
+        
+        // 为新闻添加分类（基于来源）
+        newsData.forEach(news => {
+            news.category = getCategoryFromSource(news.source);
+        });
+        
+        displayNews('all');
+    } catch (error) {
+        console.error('加载新闻失败:', error);
+        // 如果API失败，显示错误信息
+        newsGrid.innerHTML = `
+            <div class="news-error">
+                <p>暂时无法加载新闻，请稍后再试</p>
+                <button onclick="loadNewsFromAPI()" class="btn btn-primary">重新加载</button>
+            </div>
+        `;
+    }
+}
+
+// 根据新闻来源确定分类
+function getCategoryFromSource(source) {
+    const sourceLower = source.toLowerCase();
+    if (sourceLower.includes('tech') || sourceLower.includes('venture')) {
+        return 'tech';
+    } else if (sourceLower.includes('industry') || sourceLower.includes('business')) {
+        return 'industry';
+    } else {
+        return 'research';
+    }
+}
 
 // 设置事件监听器
 function setupEventListeners() {
@@ -80,15 +92,25 @@ function displayNews(category) {
         ? newsData 
         : newsData.filter(news => news.category === category);
 
+    if (filteredNews.length === 0) {
+        newsGrid.innerHTML = `
+            <div class="news-empty">
+                <p>暂无相关新闻</p>
+            </div>
+        `;
+        return;
+    }
+
     newsGrid.innerHTML = filteredNews.map(news => `
         <article class="news-card" data-category="${news.category}">
             <div class="meta">
                 <span class="category">${getCategoryName(news.category)}</span>
-                <span class="date">${formatDate(news.date)}</span>
+                <span class="source">${news.source}</span>
+                <span class="date">${formatDate(news.published_at)}</span>
             </div>
             <h3>${news.title}</h3>
-            <p>${news.summary}</p>
-            <a href="#" class="read-more">阅读更多</a>
+            <p>${news.description}</p>
+            <a href="${news.link}" target="_blank" class="read-more">阅读原文</a>
         </article>
     `).join('');
 }
@@ -106,7 +128,19 @@ function getCategoryName(category) {
 // 格式化日期
 function formatDate(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleDateString('zh-CN');
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 1) {
+        return '今天';
+    } else if (diffDays === 2) {
+        return '昨天';
+    } else if (diffDays <= 7) {
+        return `${diffDays - 1}天前`;
+    } else {
+        return date.toLocaleDateString('zh-CN');
+    }
 }
 
 // 处理订阅
